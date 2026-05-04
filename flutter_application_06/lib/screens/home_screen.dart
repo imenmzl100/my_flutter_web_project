@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import '../widgets/custom_text_field.dart';
+import 'package:flutter_application_06/widgets/custom_text_field.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,9 +22,14 @@ class _HomeScreenState extends State<HomeScreen> {
         'desc': _descController.text,
         'time': DateTime.now().toString(),
       });
+
       _nameController.clear();
       _descController.clear();
     }
+  }
+
+  void _boxDelete(int index) {
+    _myBox.deleteAt(index);
   }
 
   @override
@@ -31,10 +37,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: Row(
         children: [
-          // Sidebar (Input)
           _buildSidebar(),
-          // Main Content (List)
-          Expanded(child: _buildMainContent()),
+          Expanded(
+            child: _buildMainContent(),
+          ),
         ],
       ),
     );
@@ -47,16 +53,40 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.all(30),
       child: Column(
         children: [
-          const Icon(Icons.auto_awesome, color: Colors.amber, size: 50),
+          const Icon(
+            Icons.auto_awesome,
+            color: Colors.amber,
+            size: 50,
+          ),
           const SizedBox(height: 30),
-          CustomTextField(controller: _nameController, hint: "Product Name", icon: Icons.edit),
+
+          CustomTextField(
+            controller: _nameController,
+            hint: "Product Name",
+            icon: Icons.edit,
+          ),
+
           const SizedBox(height: 20),
-          CustomTextField(controller: _descController, hint: "Description", icon: Icons.description, maxLines: 3),
+
+          CustomTextField(
+            controller: _descController,
+            hint: "Description",
+            icon: Icons.description,
+            maxLines: 3,
+          ),
+
           const SizedBox(height: 30),
+
           ElevatedButton(
             onPressed: _addData,
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.amber, minimumSize: const Size(double.infinity, 50)),
-            child: const Text("Save Data", style: TextStyle(color: Colors.black)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.amber,
+              minimumSize: const Size(double.infinity, 50),
+            ),
+            child: const Text(
+              "Save Data",
+              style: TextStyle(color: Colors.black),
+            ),
           ),
         ],
       ),
@@ -72,13 +102,17 @@ class _HomeScreenState extends State<HomeScreen> {
           itemCount: box.length,
           itemBuilder: (context, index) {
             final item = box.getAt(index);
+
             return Card(
               child: ListTile(
-                title: Text(item['name']),
-                subtitle: Text(item['desc']),
+                title: Text(item['name'] ?? ''),
+                subtitle: Text(item['desc'] ?? ''),
                 trailing: IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red),
-                  onPressed: () => _myBox.deleteAt(index),
+                  icon: const Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
+                  onPressed: () => _boxDelete(index),
                 ),
               ),
             );
